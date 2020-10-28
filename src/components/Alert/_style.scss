@@ -1,0 +1,51 @@
+.alert {
+  padding: $alert-padding-y $alert-padding-x;
+  margin-bottom: $alert-margin-bottom;
+  border-radius: $border-radius;
+  transition: $alert-transition;
+  transform-origin: top;
+  opacity: 1;
+  position: relative;
+
+  .alert-header {
+    overflow: hidden;
+    >.text {
+      position: relative;
+      width: max-content;
+      font-size: $font-size-base;
+      white-space:nowrap;
+      margin: 0;
+      &:hover {
+        animation: $alert-animation;
+      }
+    }
+    .alert-close-icon {
+      top: $alert-padding-x / 2;
+      position: absolute;
+      right: $alert-padding-x / 2;
+      width: $icon-width;
+      height: $icon-height;
+      cursor: pointer;
+    }
+  }
+  .alert-content {
+    font-size: $font-size-sm;
+  }
+}
+
+.alert-success {
+  background-color: $success;
+  color: $white;
+}
+.alert-default {
+  background-color: $info;
+  color: $white;
+}
+.alert-danger {
+  background-color: $danger;
+  color: $white;
+}
+.alert-warning {
+  background-color: $warning;
+  color: $black;
+}

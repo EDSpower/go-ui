@@ -1,0 +1,77 @@
+.select-wrap {
+  line-height: $select-line-height;
+  padding: 0 $select-padding-x;
+  position: relative;
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: $select-content-transition;
+  &:hover {
+    border-color: $cyan;
+  }
+  &:active {
+    box-shadow: $input-focus-box-shadow;
+  }
+  &.disabled {
+    background-color: $gray-200;
+    color: $gray-500;
+    pointer-events: none;
+  }
+  &.active {
+    border-color: $cyan;
+    box-shadow: $input-focus-box-shadow;
+  }
+  >.content {
+    position: absolute;
+    transition: $select-content-transition;
+    transform-origin: top;
+    transform: scaleY(0);
+    opacity: 0;
+    width: 100%;
+    background-color: $white;
+    border-radius: $border-radius;
+    left: 0;
+    top: $select-line-height + 0.3rem;
+    box-shadow: $box-shadow;
+    padding: 0.1rem 0;
+    &.show {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    >.item {
+      line-height: $select-line-height;
+      font-weight: $font-weight-bold;
+      padding: 0 $select-padding-x;
+      box-sizing: border-box;
+      font-size: $font-size-sm;
+      &:hover, &.hover {
+        background-color: lighten($cyan, 50%);
+      }
+      &.disabled {
+        color: $gray-500;
+        // pointer-events: none;
+        cursor: not-allowed;
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+  >.value {
+    border: none;
+    padding: 0;
+    &:focus {
+      outline-color: white;
+      outline-width: 0;
+    }
+  }
+  >.select-icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -($icon-height / 2);
+    right: $select-padding-x;
+    width: $icon-width;
+    height: $icon-height;
+  }
+}
+

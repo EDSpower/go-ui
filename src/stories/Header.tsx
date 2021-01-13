@@ -1,9 +1,12 @@
 import React from 'react';
 
-import Button, { ButtonSize, ButtonType } from '../components/Button/button';
+import { Button } from '../components/Button/button';
 import './header.css';
 
 export interface HeaderProps {
+  /**
+   * 用户信息
+   */
   user?: {};
   onLogin: () => void;
   onLogout: () => void;
@@ -34,11 +37,11 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, onCreat
       </div>
       <div>
         {user ? (
-          <Button size={ButtonSize.Small} onClick={onLogout} children="Log out" />
+          <Button size='sm' onClick={onLogout} children="Log out" />
         ) : (
           <>
-            <Button size={ButtonSize.Small} onClick={onLogin} children="Log in" />
-            <Button btnType={ButtonType.Primary} size={ButtonSize.Small} onClick={onCreateAccount} children="Sign up" />
+            <Button size='sm' onClick={onLogin} children="Log in" />
+            <Button btnType='primary' size='sm' onClick={onCreateAccount} children="Sign up" />
           </>
         )}
       </div>

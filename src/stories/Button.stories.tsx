@@ -1,8 +1,6 @@
-import React from 'react';
-// also exported from '@storybook/react' if you can deal with breaking changes in 6.1
-import { Story, Meta } from '@storybook/react/types-6-0';
-
-import { Button, ButtonProps } from './Button';
+import React from 'react'
+import { Button, ButtonProps } from '../components/Button/button'
+import { Story, Meta } from '@storybook/react'
 
 export default {
   title: 'Example/Button',
@@ -10,29 +8,36 @@ export default {
   argTypes: {
     backgroundColor: { control: 'color' },
   },
-} as Meta;
+} as Meta
 
-const Template: Story<ButtonProps> = (args) => <Button {...args} />;
+const Template: Story<ButtonProps> = (args) => (
+  <Button {...args}>默认</Button>
+)
 
-export const Primary = Template.bind({});
+export const Default = Template.bind({})
+Default.args = {
+  btnType: 'default',
+  className: '123',
+  onclick: () => {
+    alert('点击了')
+  }
+}
+
+export const Primary = Template.bind({})
 Primary.args = {
-  primary: true,
-  label: 'Button',
-};
+  btnType: 'primary',
+  btnSize: 'lg'
+}
 
-export const Secondary = Template.bind({});
-Secondary.args = {
-  label: 'Button',
-};
 
-export const Large = Template.bind({});
-Large.args = {
-  size: 'large',
-  label: 'Button',
-};
+export const Danger = Template.bind({})
+Danger.args = {
+  btnType: 'danger',
+}
 
-export const Small = Template.bind({});
-Small.args = {
-  size: 'small',
-  label: 'Button',
-};
+export const Lint = Template.bind({})
+Lint.args = {
+  btnType: 'lint',
+  href: 'www.baidu.com'
+}
+

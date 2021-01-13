@@ -1,54 +1,59 @@
 import React from 'react'
 import classnames from 'classnames'
 
-export enum ButtonType {
-  Primary = 'primary',
-  Default = 'default',
-  Danger = 'danger',
-  Lint = 'lint',
-}
-
-export enum ButtonSize {
-  Large = 'lg',
-  Small = 'sm',
-}
-
-interface BaseButtonProps {
+export interface ButtonProps {
+  /**
+   * What background color to use
+   */
+  backgroundColor?: string;
+  /**
+   * Is this the principal call to action on the page?
+   */
   className?: string
   /**
    * 是否开启禁用
    */
   disabled?: boolean
-  btnType?: ButtonType
-  size?: ButtonSize
+  /**
+   * button类型
+   */
+  btnType?: 'primary' | 'default' | 'danger' | 'lint'
+  /**
+   * button大小
+   */
+  size?: 'lg' | 'sm'
+  /**
+   * 当 btnType='lint' 的链接地址
+   */
   href?: string
+  /**
+   * button的内容
+   */
   children?: React.ReactChild
+  /**
+   * 点击时间
+   */
+  onClick: () => void
 }
 
-type NativeButtonProps = BaseButtonProps & React.ButtonHTMLAttributes<HTMLElement>
-type AnchorButtonProps = BaseButtonProps & React.AnchorHTMLAttributes<HTMLElement>
 
-export type ButtonProps = BaseButtonProps & NativeButtonProps & AnchorButtonProps
-
-const Button: React.FC<ButtonProps> = (props) => {
-  const { btnType, size, children, href, disabled, className, ...restProps } = props
+export const Button: React.FC<ButtonProps> = (props) => {
+  const { btnType, size, children, href, disabled, className, backgroundColor, onClick, ...restProps } = props
   // btn btn-lg btn-primary
   const classes = classnames(className, {
     'btn': true,
     [`btn-${size}`]: size,
     [`btn-${btnType}`]: btnType,
-    'disabled': btnType === ButtonType.Lint && disabled
+    'disabled': btnType === 'lint' && disabled
   })
   if(btnType === 'lint') {
     return <a {...restProps} className={classes} href={href}>{children}</a>
   } else {
-    return <button {...restProps} className={classes} disabled={disabled}>{children}</button>
+    return <button style={{ backgroundColor }} onClick={onClick} {...restProps} className={classes} disabled={disabled}>{children}</button>
   }
 }
 
 Button.defaultProps = {
-  btnType: ButtonType.Default,
+  btnType: 'default',
   disabled: false
 }
-
-export default Button

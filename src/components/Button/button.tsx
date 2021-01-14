@@ -33,7 +33,7 @@ export interface ButtonProps {
   /**
    * 点击时间
    */
-  onClick: () => void
+  onClick?: (val?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 

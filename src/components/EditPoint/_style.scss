@@ -1,0 +1,64 @@
+.edit-point-wrap {
+  width: min-content;
+  height: min-content;
+  border: 1px dashed transparent;
+  position: absolute;
+  &.hover {
+    border: 1px dashed #25a589;
+    cursor: all-scroll;
+  }
+
+  .poin-item {
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border: 1px solid #59c7f9;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 1001;
+    &.n {
+      left: 50%;
+      top: -5px;
+      margin-left: -5px;
+      cursor: n-resize;
+    }
+    &.s {
+      left: 50%;
+      bottom: -5px;
+      margin-left: -5px;
+      cursor: n-resize;
+    }
+    &.w {
+      top: 50%;
+      left: -5px;
+      margin-top: -5px;
+      cursor: w-resize;
+    }
+    &.e {
+      top: 50%;
+      right: -5px;
+      margin-top: -5px;
+      cursor: w-resize;
+    }
+    &.wn {
+      top: -5px;
+      left: -5px;
+      cursor: nw-resize;
+    }
+    &.en {
+      top: -5px;
+      right: -5px;
+      cursor: ne-resize;
+    }
+    &.ws {
+      bottom: -5px;
+      left: -5px;
+      cursor: sw-resize;
+    }
+    &.es {
+      bottom: -5px;
+      right: -5px;
+      cursor: se-resize;
+    }
+  }
+}

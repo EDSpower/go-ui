@@ -3,6 +3,7 @@ import BtnDemo from './components/Button/demo'
 import AlertDemo from './components/Alert/demo'
 import SelectDemo from './components/Select/demo'
 import IconDemo from './components/Icon/demo'
+import EditDemo from './components/EditPoint/demo'
 
 function App() {
   return (
@@ -18,21 +19,7 @@ function App() {
         <h4>h4</h4>
         <h5>h5</h5>
         <h6>h6</h6>
-        init
-        <code>
-          const a = b
-        </code>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <EditDemo />
       </header>
     </div>
   );

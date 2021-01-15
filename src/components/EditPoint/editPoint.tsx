@@ -5,15 +5,7 @@ import { JsonItem } from './demo'
 export interface IeditPointProps {
   jsonData: JsonItem
   children: ReactChild
-  /**
-   * type 拖拽类型
-   * val x,y的偏移量
-   */
-  onChange: (type: 'position' | PointerType, val: {x: number, y: number}) => void
-  /**
-   * 保存当前元素的原始数据
-   */
-  savePreJson: (val: JsonItem) => void
+  saveType: (type: 'position' | PointerType) => void
 }
 
 export type PointerType = 'n' | 's' | 'w' | 'e' | 'wn' | 'en' | 'ws' | 'es'
@@ -32,19 +24,11 @@ const PointerList: PointerType[] = [
 
 // 编辑拖拽组件
 export const EditPoint: React.FC<IeditPointProps> = (props) => {
-  const { children, jsonData, onChange, savePreJson } = props
+  const { children, jsonData, saveType } = props
 
   const [hover, setHover] = useState(false)
 
   const [fouce, setFouce] = useState(false)
-
-  const [moveStart, setMoveStart] = useState(false)
-  
-
-  const startData = useRef({
-    x: 0, // 拖拽开始的鼠标x点
-    y: 0, // 拖拽开始的鼠标y点
-  })
 
   const editRef = useRef<HTMLDivElement>()
 
@@ -62,9 +46,9 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
       }
       setFouce(flag)
     }
-    shadeDom && shadeDom.addEventListener('click', handle)
+    shadeDom && shadeDom.addEventListener('mousedown', handle)
     return () => {
-      shadeDom && shadeDom.removeEventListener('click', handle)
+      shadeDom && shadeDom.removeEventListener('mousedown', handle)
     }
   }, [])
 
@@ -75,46 +59,6 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
     setHover(false)
   }
 
-  // 鼠标点击事件
-  const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    event.persist()
-    event.stopPropagation()
-    // console.log('key开始: ', key, moveStart);
-    setMoveStart(true)
-    startData.current = {
-      x: event.clientX,
-      y: event.clientY
-    }
-    savePreJson(jsonData)
-    setFouce(true)
-  }
-  // 鼠标移动事件
-  const onMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: 'position' | PointerType) => {
-    event.persist()
-    event.stopPropagation()
-    
-    if (!moveStart) { return }
-    // console.log('key移动: ', key, moveStart);
-
-    // 鼠标拖拽移动的x距离
-    const moveX = event.clientX - startData.current.x
-    // 鼠标拖拽移动的y距离
-    const moveY = event.clientY - startData.current.y
-
-    const options = {
-      x: moveX,
-      y: moveY,
-    }
-
-    onChange(key, options)
-
-  }
-  // 鼠标抬起事件
-  const onMouseUp = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
-    console.log('onMouseUp: 放开了');
-    setMoveStart(false)
-  }
-
   const wrapClasses = classes('edit-point-wrap', {
     hover: hover || fouce,
     fouce
@@ -123,18 +67,21 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
   const eleStyle = () => {
     const style = {
       left: jsonData.left + 'px',
-      top: jsonData.top + 'px'
+      top: jsonData.top + 'px',
+      zIndex: jsonData.uuid
     }
     return style
+  }
+
+  const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, type: 'position' | PointerType) =>{
+    saveType(type)
   }
 
   return (
     <div
       ref={(ele: HTMLDivElement) => editRef.current = ele}
+      onMouseDownCapture={(event) => onMouseDown(event, 'position')}
       style={eleStyle()}
-      onMouseDown={(event) => onMouseDown(event, 'position')}
-      onMouseMove={(event) => onMouseMove(event, 'position')}
-      onMouseUp={(event) => onMouseUp(event, 'position')}
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
       className={wrapClasses}
@@ -142,9 +89,7 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
       {fouce && PointerList.map(ele => (
         <div
           key={ele}
-          onMouseDown={(event) => onMouseDown(event, ele)}
-          onMouseMove={(event) => onMouseMove(event, ele)}
-          onMouseUp={(event) => onMouseUp(event, ele)}
+          onMouseDownCapture={(event) => onMouseDown(event, ele)}
           className={`poin-item ${ele}`}
         />
       ))}

@@ -3,10 +3,17 @@ import classes from 'classnames'
 import { JsonItem } from './demo'
 
 export interface IeditPointProps {
-  ceng: number
   jsonData: JsonItem
   children: ReactChild
-  onChange: (type: any,val: any, ceng: number) => void
+  /**
+   * type 拖拽类型
+   * val x,y的偏移量
+   */
+  onChange: (type: 'position' | PointerType, val: {x: number, y: number}) => void
+  /**
+   * 保存当前元素的原始数据
+   */
+  savePreJson: (val: JsonItem) => void
 }
 
 export type PointerType = 'n' | 's' | 'w' | 'e' | 'wn' | 'en' | 'ws' | 'es'
@@ -25,7 +32,7 @@ const PointerList: PointerType[] = [
 
 // 编辑拖拽组件
 export const EditPoint: React.FC<IeditPointProps> = (props) => {
-  const { children, jsonData, ceng, onChange } = props
+  const { children, jsonData, onChange, savePreJson } = props
 
   const [hover, setHover] = useState(false)
 
@@ -37,8 +44,6 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
   const startData = useRef({
     x: 0, // 拖拽开始的鼠标x点
     y: 0, // 拖拽开始的鼠标y点
-    eleX: 0, // 元素原来的x点
-    eleY: 0 // 元素原来的y点
   })
 
   const editRef = useRef<HTMLDivElement>()
@@ -74,47 +79,34 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
   const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: string) => {
     event.persist()
     event.stopPropagation()
+    // console.log('key开始: ', key, moveStart);
     setMoveStart(true)
-    console.log('key: ', key);
-    const ele = editRef.current as HTMLDivElement
     startData.current = {
       x: event.clientX,
-      y: event.clientY,
-      eleX: ele.offsetLeft,
-      eleY: ele.offsetTop,
+      y: event.clientY
     }
+    savePreJson(jsonData)
     setFouce(true)
   }
   // 鼠标移动事件
   const onMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, key: 'position' | PointerType) => {
     event.persist()
     event.stopPropagation()
-    console.log('key: ', key);
-
+    
     if (!moveStart) { return }
+    // console.log('key移动: ', key, moveStart);
 
     // 鼠标拖拽移动的x距离
     const moveX = event.clientX - startData.current.x
     // 鼠标拖拽移动的y距离
     const moveY = event.clientY - startData.current.y
 
-
-    // console.log('moveX: ', moveX, startData.current.eleX + moveX);
-    // console.log('moveY: ', moveY, startData.current.eleY + moveY);
-    if (key === 'position') {
-      // 计算后的left，top
-      const nowLeft = startData.current.eleX + moveX
-      const nowTop = startData.current.eleY + moveY
-      const position = {
-        left: nowLeft,
-        top: nowTop
-      }
-      onChange('position', position, ceng)
-    } else if (key === 's' || key === 'n') {
-      
+    const options = {
+      x: moveX,
+      y: moveY,
     }
 
-
+    onChange(key, options)
 
   }
   // 鼠标抬起事件

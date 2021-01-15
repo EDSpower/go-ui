@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { EditPoint } from './editPoint'
+import { EditPoint, IeditPointProps, PointerType } from './editPoint'
 import { Button } from '../Button/button'
 
 const demoStyle: React.CSSProperties = {
@@ -11,6 +11,7 @@ const demoStyle: React.CSSProperties = {
 }
 
 export interface JsonItem {
+  uuid: number
   width: number
   height: number
   left: number
@@ -19,13 +20,18 @@ export interface JsonItem {
   value: number
 }
 
+let preJson = {} as JsonItem
+
 const EditDemo: React.FC = () => {
+
+  // 当前被选中的元素
 
   const [ jsonList, setJsonList ] = useState<JsonItem[]>([])
   
   const addOne = () => {
     console.log('addOne: ');
     const item = {
+      uuid: jsonList.length,
       width: 100,
       height: 100,
       left: 100,
@@ -36,14 +42,46 @@ const EditDemo: React.FC = () => {
     setJsonList(old => ([...old,item]))
   }
 
-  const onChangeEle = (type: any, val: any, ceng: number) => {
-    const newList = [...jsonList]
-    const item = newList[ceng]
-    item.left = val.left
-    item.top = val.top
-    console.log('item: ', item);
-    setJsonList(newList)
+  const savePreJson = (json: JsonItem) =>{
+    console.log('savePreJson: 触发了!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', json);
+    preJson = {...json}
+  }
+  
+  const onChangeEle: IeditPointProps['onChange'] = (type, val) => {
+    console.log('type: ', type);
+    console.log('val: ', val);
 
+    // console.log('nowData: ', nowData);
+    
+    const newList = [...jsonList]
+
+    switch (type) {
+      case 'position':
+        let item1 = newList.find( e => e.uuid === preJson.uuid)
+        if (!item1) { return }
+        // 要修改的数据
+        const nowData1 = {
+          left: preJson.left + val.x,
+          top: preJson.top + val.y,
+        }
+        item1.left = nowData1.left
+        item1.top = nowData1.top
+
+        break;
+        case 's':
+          let item2 = newList.find( e => e.uuid === preJson.uuid)
+          if (!item2) { return }
+          // 要修改的数据
+          const nowData = {
+            height: preJson.height + val.y,
+          }
+          item2.height = nowData.height
+          break
+    
+      default:
+        break;
+    }
+    setJsonList(newList)
   }
 
   return (
@@ -51,8 +89,8 @@ const EditDemo: React.FC = () => {
       {jsonList.map((e, i) => (
         <EditPoint
           onChange={onChangeEle}
+          savePreJson={savePreJson}
           key={i}
-          ceng={i}
           jsonData={e}
         >
           <div

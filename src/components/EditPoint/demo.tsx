@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { EditPoint, IeditPointProps, PointerType } from './editPoint'
+import React, { useState, useRef } from 'react'
+import { EditPoint, PointerType } from './editPoint'
 import { Button } from '../Button/button'
 
 const demoStyle: React.CSSProperties = {
@@ -61,13 +61,12 @@ const EditDemo: React.FC = () => {
   }
   
   const onChangeEle = (val: {x: number, y: number}) => {
-    console.log('type: ', poinerType);
-    console.log('val: ', val);
 
     if (Object.keys(preJson).length === 0) { return }
     
     const newList = [...jsonList]
 
+    // 根据拖拽点不同计算不同的属性
     switch (poinerType) {
       case 'position':
         let item1 = newList.find( e => e.uuid === preJson.uuid)

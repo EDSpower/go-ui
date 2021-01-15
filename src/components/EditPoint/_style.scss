@@ -8,6 +8,10 @@
     cursor: all-scroll;
   }
 
+  &.fouce {
+    z-index: 999 !important;
+  }
+
   .poin-item {
     width: 10px;
     height: 10px;

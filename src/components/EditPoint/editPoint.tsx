@@ -1,4 +1,4 @@
-import React, { ReactChild, useState, useEffect, useRef } from 'react'
+import React, { ReactChild, useState, useEffect } from 'react'
 import classes from 'classnames'
 import { JsonItem } from './demo'
 
@@ -30,8 +30,6 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
 
   const [fouce, setFouce] = useState(false)
 
-  const editRef = useRef<HTMLDivElement>()
-
   // 注册画布点击事件，判断鼠标点击是否在元素上面
   useEffect(() => {
     let shadeDom = document.querySelector('.edit-demo')
@@ -39,7 +37,7 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
       let flag = false
       const classNames: string[] = event.path.map((val: any) => val.className)
       for (const item of classNames) {
-        if (item && item.indexOf('edit-point-wrap') !== -1) {
+        if (item && item.indexOf(`edit_${jsonData.uuid}`) !== -1) {
           flag = true
           break
         }
@@ -50,7 +48,7 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
     return () => {
       shadeDom && shadeDom.removeEventListener('mousedown', handle)
     }
-  }, [])
+  }, [jsonData.uuid])
 
   const onMouseOver = () => {
     setHover(true)
@@ -61,7 +59,8 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
 
   const wrapClasses = classes('edit-point-wrap', {
     hover: hover || fouce,
-    fouce
+    fouce,
+    [`edit_${jsonData.uuid}`]: true
   })
 
   const eleStyle = () => {
@@ -79,12 +78,11 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
 
   return (
     <div
-      ref={(ele: HTMLDivElement) => editRef.current = ele}
+      className={wrapClasses}
       onMouseDownCapture={(event) => onMouseDown(event, 'position')}
       style={eleStyle()}
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
-      className={wrapClasses}
     >
       {fouce && PointerList.map(ele => (
         <div

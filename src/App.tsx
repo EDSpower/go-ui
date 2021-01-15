@@ -1,15 +1,15 @@
 import React from 'react';
-import BtnDemo from './components/Button/demo'
-import AlertDemo from './components/Alert/demo'
-import SelectDemo from './components/Select/demo'
-import IconDemo from './components/Icon/demo'
+// import BtnDemo from './components/Button/demo'
+// import AlertDemo from './components/Alert/demo'
+// import SelectDemo from './components/Select/demo'
+// import IconDemo from './components/Icon/demo'
 import EditDemo from './components/EditPoint/demo'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <BtnDemo />
+        {/* <BtnDemo />
         <AlertDemo />
         <SelectDemo />
         <IconDemo />
@@ -18,7 +18,7 @@ function App() {
         <h3>h3</h3>
         <h4>h4</h4>
         <h5>h5</h5>
-        <h6>h6</h6>
+        <h6>h6</h6> */}
         <EditDemo />
       </header>
     </div>

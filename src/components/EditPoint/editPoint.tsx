@@ -1,4 +1,4 @@
-import React, { ReactChild, useState, useEffect } from 'react'
+import React, { ReactChild, useState, useEffect, memo } from 'react'
 import classes from 'classnames'
 import { JsonItem } from './demo'
 
@@ -23,7 +23,7 @@ const PointerList: PointerType[] = [
 ]
 
 // 编辑拖拽组件
-export const EditPoint: React.FC<IeditPointProps> = (props) => {
+const EditPoint: React.FC<IeditPointProps> = (props) => {
   const { children, jsonData, saveType } = props
 
   const [hover, setHover] = useState(false)
@@ -95,3 +95,5 @@ export const EditPoint: React.FC<IeditPointProps> = (props) => {
     </div>
   )
 }
+
+export default memo(EditPoint)

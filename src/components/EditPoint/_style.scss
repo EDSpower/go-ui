@@ -3,6 +3,7 @@
   height: min-content;
   border: 1px dashed transparent;
   position: absolute;
+  user-select:none;
   &.hover {
     border: 1px dashed #25a589;
     cursor: all-scroll;

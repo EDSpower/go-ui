@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react'
-import { EditPoint, PointerType } from './editPoint'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
+import EditPoint, { PointerType } from './editPoint'
 import { Button } from '../Button/button'
 
 const demoStyle: React.CSSProperties = {
   width: '375px',
   height: '900px',
-  margin: '0 auto',
+  margin: '300px auto 0',
   backgroundColor: '#eee',
   position: 'relative'
 }
@@ -30,37 +30,14 @@ const EditDemo: React.FC = () => {
 
   const [ jsonList, setJsonList ] = useState<JsonItem[]>([])
 
-  const [moveStart, setMoveStart] = useState(false)
-  
+  const startRef = useRef<boolean>(false)
 
   const startData = useRef({
     x: 0, // 拖拽开始的鼠标x点
     y: 0, // 拖拽开始的鼠标y点
   })
-  
-  const addOne = () => {
-    console.log('addOne: ');
-    const item = {
-      uuid: jsonList.length,
-      width: 100,
-      height: 100,
-      left: 100,
-      top: 100,
-      bgColor: 'pink',
-      value: Math.random()
-    }
-    setJsonList(old => ([...old,item]))
-  }
 
-  const savePreJson = (json: JsonItem, type: 'position' | PointerType) =>{
-    console.log('savePreJson: 触发了!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    console.log('type: ', type);
-    console.log('json: ', json);
-    preJson = {...json}
-    poinerType = type
-  }
-  
-  const onChangeEle = (val: {x: number, y: number}) => {
+  const onChangeEle = useCallback((val: {x: number, y: number}) => {
 
     if (Object.keys(preJson).length === 0) { return }
     
@@ -138,26 +115,26 @@ const EditDemo: React.FC = () => {
       default:
         break;
     }
+    
     setJsonList(newList)
-  }
+  }, [jsonList]) 
 
   // 鼠标点击事件
-  const onMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event.persist()
+  const onMouseDown = (event: MouseEvent) => {
     event.stopPropagation()
-    // console.log('key开始: ', key, moveStart);
-    setMoveStart(true)
+    startRef.current = true
     startData.current = {
       x: event.clientX,
       y: event.clientY
     }
   }
+
   // 鼠标移动事件
-  const onMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event.persist()
+  const onMouseMove = useCallback((event: MouseEvent) => {
+    // event.persist()
     event.stopPropagation()
     
-    if (!moveStart) { return }
+    if (!startRef.current) { return }
     // console.log('key移动: ', key, moveStart);
 
     // 鼠标拖拽移动的x距离
@@ -172,21 +149,53 @@ const EditDemo: React.FC = () => {
 
     onChangeEle(options)
 
-  }
+  }, [onChangeEle]) 
+
   // 鼠标抬起事件
-  const onMouseUp = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    console.log('onMouseUp: 放开了');
-    setMoveStart(false)
+  const onMouseUp = (event: any) => {
+    startRef.current = false
     preJson = {} as JsonItem
   }
+
+  useEffect(() => {
+    console.log('注册了');
+    
+    window.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+    return () => {
+      window.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+    }
+  }, [onMouseMove])
+  
+  const addOne = () => {
+    console.log('addOne: ');
+    const item = {
+      uuid: jsonList.length,
+      width: 100,
+      height: 100,
+      left: 100,
+      top: 100,
+      bgColor: 'pink',
+      value: Math.random()
+    }
+    setJsonList(old => ([...old,item]))
+  }
+
+  const savePreJson = (json: JsonItem, type: 'position' | PointerType) =>{
+    console.log('type: ', type);
+    console.log('json: ', json);
+    preJson = {...json}
+    poinerType = type
+  }
+
 
   return (
     <div
       style={demoStyle}
       className='edit-demo'
-      onMouseDown={(event) => onMouseDown(event)}
-      onMouseMove={(event) => onMouseMove(event)}
-      onMouseUp={(event) => onMouseUp(event)}
     >
       {jsonList.map((e, i) => (
         <EditPoint
